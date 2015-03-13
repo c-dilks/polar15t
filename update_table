@@ -1,0 +1,26 @@
+#!/bin/bash
+
+curl "http://www.phy.bnl.gov/cnipol/fills/?rp=15&fn=&ft=&be=&mode=11&sb=Select" > htmlfile
+cat htmlfile | grep +- | sed 's/^     //g' > polarimetry.csv.tmp
+
+# put zeroes in where we have blank data
+> polarimetry.csv
+while read line; do
+  linemod="$line"
+  for i in {34,43,51,60,68,77,85,94,102,111,119,128}; do
+    cutstr=$(echo "$linemod" | cut -c${i})
+    #echo "$linemod"
+    #echo "$i=\"${cutstr}\""
+    if [ "$cutstr" == " " ]; then
+      linemod="$(echo "$linemod" | sed s/./0/${i})"
+    fi
+  done
+  echo $linemod | awk '{print $1}'
+  echo "$linemod" >> polarimetry.csv
+done < polarimetry.csv.tmp
+
+cat polarimetry.csv | sed 's/+-//g' | column -t > polarimetry.dat
+
+root -b -q mkTree.C
+
+rm htmlfile
