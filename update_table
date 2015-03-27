@@ -1,7 +1,9 @@
 #!/bin/bash
 
+# download new table
 curl "http://www.phy.bnl.gov/cnipol/fills/?rp=15&fn=&ft=&be=&mode=11&sb=Select" > htmlfile
 cat htmlfile | grep +- | sed 's/^     //g' > polarimetry.csv.tmp
+rm htmlfile
 
 # put zeroes in where we have blank data
 > polarimetry.csv
@@ -19,8 +21,12 @@ while read line; do
   echo "$linemod" >> polarimetry.csv
 done < polarimetry.csv.tmp
 
+echo "please check vimdiff to see if zeroes were placed correctly, starting in 3 seconds..."
+sleep 3
+vimdiff polarimetry.csv{,.tmp}
+
+# remove "+-" symbols
 cat polarimetry.csv | sed 's/+-//g' | column -t > polarimetry.dat
 
+# make a tree
 root -b -q mkTree.C
-
-rm htmlfile
