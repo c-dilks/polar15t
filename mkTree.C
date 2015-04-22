@@ -2,11 +2,12 @@ void mkTree(const char * datfile="polarimetry.dat")
 {
   TFile * outfile = new TFile("pol.root","RECREATE");
   TTree * pol_in = new TTree("pol_in","pol_in");
-  pol_in->ReadFile(datfile,"fill/I:energy/F:time/D:b_pol/F:b_pol_e/F:b_p0/F:b_p0_e/F:b_p1/F:b_p1_e/F:y_pol/F:y_pol_e/F:y_p0/F:y_p0_e/F:y_p1/F:y_p1_e/F");
+  pol_in->ReadFile(datfile,"fill/I:energy/F:time_start/D:time_stop/D:b_pol/F:b_pol_e/F:b_p0/F:b_p0_e/F:b_p1/F:b_p1_e/F:y_pol/F:y_pol_e/F:y_p0/F:y_p0_e/F:y_p1/F:y_p1_e/F");
   /*
     fill    = fill
     energy  = beam energy
-    time    = start time
+    time_start = start time
+    time_stop  = stop time
     b_pol   = blue polarisation
     b_pol_e = blue polarisation error
     b_p0    = blue p0
@@ -26,7 +27,7 @@ void mkTree(const char * datfile="polarimetry.dat")
   //
   Int_t fill;
   Float_t energy;
-  Double_t time;
+  Double_t time_start,time_stop;
   Float_t b_pol;
   Float_t b_pol_e;
   Float_t b_p0;
@@ -42,7 +43,8 @@ void mkTree(const char * datfile="polarimetry.dat")
 
   pol_in->SetBranchAddress("fill",&fill);
   pol_in->SetBranchAddress("energy",&energy);
-  pol_in->SetBranchAddress("time",&time);
+  pol_in->SetBranchAddress("time_start",&time_start);
+  pol_in->SetBranchAddress("time_stop",&time_stop);
   pol_in->SetBranchAddress("b_pol",&b_pol);
   pol_in->SetBranchAddress("b_pol_e",&b_pol_e);
   pol_in->SetBranchAddress("b_p0",&b_p0);
@@ -60,7 +62,8 @@ void mkTree(const char * datfile="polarimetry.dat")
 
   pol->Branch("fill",&fill,"fill/I");
   pol->Branch("energy",&energy,"energy/F");
-  pol->Branch("time",&time,"time/D");
+  pol->Branch("time_start",&time_start,"time_start/D");
+  pol->Branch("time_stop",&time_stop,"time_stop/D");
   pol->Branch("b_pol",&b_pol,"b_pol/F");
   pol->Branch("b_pol_e",&b_pol_e,"b_pol_e/F");
   pol->Branch("b_p0",&b_p0,"b_p0/F");

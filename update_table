@@ -9,7 +9,7 @@ rm htmlfile
 > polarimetry.csv
 while read line; do
   linemod="$line"
-  for i in {34,43,51,60,68,77,85,94,102,111,119,128}; do
+  for i in {47,56,64,73,81,90,98,107,115,124,132,141}; do
     cutstr=$(echo "$linemod" | cut -c${i})
     #echo "$linemod"
     #echo "$i=\"${cutstr}\""
