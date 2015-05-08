@@ -9,6 +9,7 @@ rm htmlfile
 > polarimetry.csv
 while read line; do
   linemod="$line"
+  fill=$(echo $line | awk '{print $1}')
   for i in {47,56,64,73,81,90,98,107,115,124,132,141}; do
     cutstr=$(echo "$linemod" | cut -c${i})
     #echo "$linemod"
@@ -17,6 +18,9 @@ while read line; do
       linemod="$(echo "$linemod" | sed s/./0/${i})"
     fi
   done
+  if [ $fill -gt 18953 ]; then
+    linemod="${linemod}    0    +-  0       0    +-  0       0    +-  0   "
+  fi
   echo $linemod | awk '{print $1}'
   echo "$linemod" >> polarimetry.csv
 done < polarimetry.csv.tmp
